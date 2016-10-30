@@ -88,21 +88,20 @@ public class FBScript : MonoBehaviour {
 		}
 	}
 
-	public static void GetFBProfilPic(string userID){
-		print (userID);
-		instance.StartCoroutine (UserImage(userID));
+	public static void GetFBProfilPic(Sprite s){
+		profPic.sprite = s;
 	}
 
 	static IEnumerator UserImage(string userID)
 	{
-		Image profilePic = profPic.GetComponent<Image> ();
-		WWW url = new WWW("https://graph.facebook.com/" + userID+ "/picture?type=square&height=128&width=128"); 
-		Texture2D textFb2 = new Texture2D(128, 128, TextureFormat.ARGB32, false); //TextureFormat must be DXT5
+		WWW url = new WWW("https" + "://graph.facebook.com/" + userID+ "/picture?type=large"); 
+		Texture2D textFb2 = new Texture2D(128, 128, TextureFormat.DXT1, false); //TextureFormat must be DXT5
 		yield return url;
 		url.LoadImageIntoTexture(textFb2);
-		profilePic.sprite = Sprite.Create (textFb2, new Rect (0, 0, textFb2.width, textFb2.height), new Vector2 (0.5f, 0.5f), 100);
+		profPic.sprite = Sprite.Create(textFb2, new Rect(0,0,textFb2.width, textFb2.height), new Vector2(0.5f, 0.5f));
 		Debug.Log ("loaded");
 	}
+
 
 	void DisplayProfPic(IGraphResult result)
 	{

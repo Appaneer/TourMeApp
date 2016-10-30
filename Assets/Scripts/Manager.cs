@@ -14,7 +14,8 @@ public class Manager : MonoBehaviour {
 	public InputField blurIF;
 	public InputField cityIF;
 	public InputField cityInput;
-
+	public Text registered;
+	public bool reg = false;
 	public Canvas mainCanvas;
 	public Canvas registrationCanvas;
 	public Canvas loginCanvas;
@@ -70,6 +71,11 @@ public class Manager : MonoBehaviour {
 			hongKong.SetActive(false);
 			paris.SetActive(true);
 		}
+
+		if (reg)
+			registered.enabled = true;
+		else
+			registered.enabled = false;
 	}
 
 	public void OpenLoginPage(){
@@ -165,6 +171,15 @@ public class Manager : MonoBehaviour {
 		OpenLoginPage ();
 	}
 
+	public void doneRegister()
+	{
+		reg = true;
+	}
+	public void unRegister()
+	{
+		reg=false;
+	}
+
 	IEnumerator AddGuide(string name, string email, string phone, string city, string blur){
 		string url = "http://xavieriscool.web44.net/post.php?" + "name=" + WWW.EscapeURL (name.Trim ())
 			+ "&email=" + WWW.EscapeURL (email.Trim ())
@@ -198,6 +213,9 @@ public class Manager : MonoBehaviour {
 		}
 	}
 
+	public Sprite[] s;
+	string id;
+
 	IEnumerator GetProfileFromDB(string guideName){
 		string url = "http://xavieriscool.web44.net/getProfile.php?" + "name=" + WWW.EscapeURL (guideName.Trim ());
 		WWW getProfile = new WWW (url);
@@ -211,7 +229,20 @@ public class Manager : MonoBehaviour {
 			profileEmail.text = "Email: " + guides [0].Trim ();
 			profilePhone.text = "Phone #: " + guides [1].Trim ();
 			profileBlurb.text = guides [2].Trim ();
-			FBScript.GetFBProfilPic (guides[3].Trim());
+			id = guides [3].Trim ();
+			string name = guideName;
+			if(name.Contains("Xavier"))
+				FBScript.GetFBProfilPic (s[0]);
+			else if(name.Contains("Jimmy"))
+				FBScript.GetFBProfilPic (s[1]);
+			else if(name.Contains("Lizzy"))
+				FBScript.GetFBProfilPic (s[2]);
+			else
+				FBScript.GetFBProfilPic (s[3]);
 		}
+	}
+
+	public void OpenProfile(){
+		Application.OpenURL ("http://facebook.com/profile.php?id=" + id + "&fref=ts");
 	}
 }
