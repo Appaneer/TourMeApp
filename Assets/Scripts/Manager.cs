@@ -1,6 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+﻿	using UnityEngine;
+	using UnityEngine.UI;
+	using System.Collections;
+	using System.Net;
+	using System.Net.Mail;
+	using System.Net.Security;
+	using System.Security.Cryptography.X509Certificates;
+
 public class Manager : MonoBehaviour {
 	public InputField fullNameIF;
 	public InputField emailIF;
@@ -23,6 +28,8 @@ public class Manager : MonoBehaviour {
 	public Text profileEmail;
 	public Text profilePhone;
 	public Text profileBlurb;
+	public Text profileEmailGuide;
+	public InputField profileEmailIF;
 
 	// Use this for initialization
 	void Start () {
@@ -97,7 +104,28 @@ public class Manager : MonoBehaviour {
 
 	public void GetProfile(Text name){
 		profileName.text = name.text.Trim();
+		profileEmailGuide.text = "Email " + profileName.text.Substring (0, profileName.text.IndexOf(' '));
 		StartCoroutine (GetProfileFromDB(name.text.Trim()));
+	}
+
+	public void SendEmail(){
+		MailMessage mail = new MailMessage();
+		
+		mail.From = new MailAddress("xllgms@gmail.com");
+		mail.To.Add("xllgms@gmail");
+		mail.Subject = "Survival of the Fittest verification code";
+		mail.Body = "Your verification code is ";
+		
+		SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+		smtpServer.Port = 587;
+		smtpServer.Credentials = new System.Net.NetworkCredential("xllgms@gmail.com", "xavlu0829") as ICredentialsByHost;
+		smtpServer.EnableSsl = false;
+		
+		ServicePointManager.ServerCertificateValidationCallback =
+			delegate(object s, X509Certificate CERTIFICATE, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		{ return true; };
+		
+		smtpServer.Send(mail);
 	}
 
 	public void register()
@@ -146,7 +174,6 @@ public class Manager : MonoBehaviour {
 			Debug.LogError ("Error: " + getProfile.error);
 		} 
 		else {
-			print (getProfile.text);
 			string[] guides = getProfile.text.Substring (0, getProfile.text.LastIndexOf ('%') - 1).Split ('=');
 			profileEmail.text = "Email: " + guides [0].Trim ();
 			profilePhone.text = "Phone #: " + guides [1].Trim ();
