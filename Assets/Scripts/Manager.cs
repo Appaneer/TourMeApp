@@ -19,6 +19,11 @@ public class Manager : MonoBehaviour {
 	public Text cityTitleText;
 	public Text[] guidesText;
 
+	public Text profileName;
+	public Text profileEmail;
+	public Text profilePhone;
+	public Text profileBlurb;
+
 	// Use this for initialization
 	void Start () {
 		//OpenLoginPage ();
@@ -90,9 +95,13 @@ public class Manager : MonoBehaviour {
 		//profileCanvas.enabled = false;
 	}
 
+	public void GetProfile(Text name){
+		profileName.text = name.text.Trim();
+		StartCoroutine (GetProfileFromDB(name.text.Trim()));
+	}
+
 	public void register()
-	{
-		
+	{	
 		OpenLoginPage ();
 	}
 
@@ -109,9 +118,6 @@ public class Manager : MonoBehaviour {
 		if (postGuide.error != null) {
 			Debug.LogError ("Error: " + postGuide.error);
 		} 
-		else if(postGuide.text.Equals("Success")){
-
-		}
 	}
 
 	IEnumerator GetGuides(string cityName){
@@ -123,17 +129,15 @@ public class Manager : MonoBehaviour {
 			Debug.LogError ("Error: " + getGuides.error);
 		} 
 		else {
-			
-			string[] guides = getGuides.text.Substring(0, getGuides.text.LastIndexOf('%')).Split('=');
-			print (getGuides.text.Substring(0, getGuides.text.LastIndexOf('%')));
-			print (guides.Length - 1);
-			for(int i = 0; i < Mathf.Min(guides.Length - 1, guidesText.Length); i++){
+			string[] guides = getGuides.text.Substring(0, getGuides.text.LastIndexOf('%') - 1).Split('=');
+			for(int i = 0; i < Mathf.Min(guides.Length, guidesText.Length); i++){
 				guidesText [i].text = guides [i];
+				guidesText [i].GetComponentInChildren<Image> ().enabled = true;
 			}
 		}
 	}
 
-	IEnumerator GetProfile(string guideName){
+	IEnumerator GetProfileFromDB(string guideName){
 		string url = "http://xavieriscool.web44.net/getProfile.php?" + "name=" + WWW.EscapeURL (guideName.Trim ());
 		WWW getProfile = new WWW (url);
 		yield return getProfile;
@@ -142,11 +146,11 @@ public class Manager : MonoBehaviour {
 			Debug.LogError ("Error: " + getProfile.error);
 		} 
 		else {
-			string[] guides = getProfile.text.Split('=');
-			int age = int.Parse (guides [0].Trim ());
-			string email = guides [1].Trim ();
-			string phoneNumber = guides [2].Trim ();
-			string blur = guides [3].Trim ();
+			print (getProfile.text);
+			string[] guides = getProfile.text.Substring (0, getProfile.text.LastIndexOf ('%') - 1).Split ('=');
+			profileEmail.text = "Email: " + guides [0].Trim ();
+			profilePhone.text = "Phone #: " + guides [1].Trim ();
+			profileBlurb.text = guides [2].Trim ();
 		}
 	}
 }
