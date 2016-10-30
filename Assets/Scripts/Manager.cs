@@ -112,20 +112,21 @@ public class Manager : MonoBehaviour {
 		MailMessage mail = new MailMessage();
 		
 		mail.From = new MailAddress("xllgms@gmail.com");
-		mail.To.Add("xllgms@gmail");
-		mail.Subject = "Survival of the Fittest verification code";
-		mail.Body = "Your verification code is ";
-		
+		mail.To.Add(profileEmail.text.Substring(profileEmail.text.IndexOf(':') + 1).Trim());
+		mail.Subject = "A TourMe Customer Sent a Request";
+		mail.Body = profileEmailIF.text.Trim();
+
 		SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
 		smtpServer.Port = 587;
 		smtpServer.Credentials = new System.Net.NetworkCredential("xllgms@gmail.com", "xavlu0829") as ICredentialsByHost;
-		smtpServer.EnableSsl = false;
+		smtpServer.EnableSsl = true;
 		
 		ServicePointManager.ServerCertificateValidationCallback =
 			delegate(object s, X509Certificate CERTIFICATE, X509Chain chain, SslPolicyErrors sslPolicyErrors)
 		{ return true; };
 		
 		smtpServer.Send(mail);
+		Debug.Log("Success");
 	}
 
 	public void register()
