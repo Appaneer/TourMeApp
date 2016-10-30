@@ -37,10 +37,12 @@ public class Manager : MonoBehaviour {
 	public GameObject hongKong;
 	public GameObject paris;
 
+	public FBScript fb;
+
 	// Use this for initialization
 	void Start () {
 		OpenLoginPage ();
-
+		fb = GetComponent<FBScript> ();
 	}
 
 	void Update() {
@@ -118,12 +120,7 @@ public class Manager : MonoBehaviour {
 	}
 
 	public void OpenProfileCanvas(){
-	//	mainCanvas.enabled = false;
-		//registrationCanvas.enabled = false;
-		//loginCanvas.enabled = false;
-		//landingCanvas.enabled = false;
-		//tourGuideRegistrationCanvas.enabled = false;
-		//profileCanvas.enabled = true;
+		//fb.GetFBProfilPic ();
 	}
 
 	public void PostAsTourGuide(){
@@ -173,7 +170,8 @@ public class Manager : MonoBehaviour {
 			+ "&email=" + WWW.EscapeURL (email.Trim ())
 			+ "&phone=" + WWW.EscapeURL (phone.Trim ())
 			+ "&city=" + WWW.EscapeURL (city.Trim ())
-			+ "&blur=" + WWW.EscapeURL (blur.Trim ());
+			+ "&blur=" + WWW.EscapeURL (blur.Trim ())
+			+ "&userID=" + WWW.EscapeURL (FBScript.ID);
 
 		WWW postGuide = new WWW (url);
 		yield return postGuide;
@@ -213,6 +211,7 @@ public class Manager : MonoBehaviour {
 			profileEmail.text = "Email: " + guides [0].Trim ();
 			profilePhone.text = "Phone #: " + guides [1].Trim ();
 			profileBlurb.text = guides [2].Trim ();
+			FBScript.GetFBProfilPic (guides[3].Trim());
 		}
 	}
 }

@@ -9,12 +9,16 @@ public class FBScript : MonoBehaviour {
 	public GameObject dialogLoggedIn;
 	public GameObject dialogLoggedOut;
 	public GameObject dialogUsername;
-	public GameObject profPic;
-	public string ID;
-	void Awake(){
+	public static Image profPic;
+	public static string ID;
+
+	static FBScript instance;
+
+	void Start(){instance = this;
+		profPic = GameObject.Find ("fb profile pic").GetComponent<Image> ();
+		print (profPic.GetInstanceID());
 
 		FB.Init (SetInit, OnHideUnity);
-	
 	}
 
 	void SetInit()
@@ -83,15 +87,20 @@ public class FBScript : MonoBehaviour {
 
 		}
 	}
-	 
-	IEnumerator UserImage(string userID)
+
+	public static void GetFBProfilPic(string userID){
+		print (userID);
+		instance.StartCoroutine (UserImage(userID));
+	}
+
+	static IEnumerator UserImage(string userID)
 	{
 		Image profilePic = profPic.GetComponent<Image> ();
-		WWW url = new WWW("https" + "://graph.facebook.com/" + userID+ "/picture?type=square&height=128&width=128"); 
-		Texture2D textFb2 = new Texture2D(128, 128, TextureFormat.DXT1, false); //TextureFormat must be DXT5
+		WWW url = new WWW("https://graph.facebook.com/" + userID+ "/picture?type=square&height=128&width=128"); 
+		Texture2D textFb2 = new Texture2D(128, 128, TextureFormat.ARGB32, false); //TextureFormat must be DXT5
 		yield return url;
 		url.LoadImageIntoTexture(textFb2);
-		profilePic.sprite = Sprite.Create (textFb2, new Rect (0, 0, 128, 128), new Vector2 ());
+		profilePic.sprite = Sprite.Create (textFb2, new Rect (0, 0, textFb2.width, textFb2.height), new Vector2 (0.5f, 0.5f), 100);
 		Debug.Log ("loaded");
 	}
 
