@@ -13,7 +13,7 @@ public class Manager : MonoBehaviour {
 	public InputField cityTourGuideIF;
 	public InputField blurIF;
 	public InputField cityIF;
-	public Text cityInput;
+	public InputField cityInput;
 
 	public Canvas mainCanvas;
 	public Canvas registrationCanvas;
@@ -40,6 +40,10 @@ public class Manager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		OpenLoginPage ();
+
+	}
+
+	void Update() {
 		if (cityInput.text == "New York City") {
 			nyc.SetActive(true);
 			jerusalem.SetActive(false);
