@@ -13,6 +13,7 @@ public class Manager : MonoBehaviour {
 	public InputField cityTourGuideIF;
 	public InputField blurIF;
 	public InputField cityIF;
+	public Text cityInput;
 
 	public Canvas mainCanvas;
 	public Canvas registrationCanvas;
@@ -31,9 +32,38 @@ public class Manager : MonoBehaviour {
 	public Text profileEmailGuide;
 	public InputField profileEmailIF;
 
+	public GameObject nyc;
+	public GameObject jerusalem;
+	public GameObject hongKong;
+	public GameObject paris;
+
 	// Use this for initialization
 	void Start () {
-		//OpenLoginPage ();
+		OpenLoginPage ();
+		if (cityInput.text == "New York City") {
+			nyc.SetActive(true);
+			jerusalem.SetActive(false);
+			hongKong.SetActive(false);
+			paris.SetActive (false);
+		}
+		else if (cityInput.text == "Jerusalem") {
+			nyc.SetActive (false);
+			jerusalem.SetActive(true);
+			hongKong.SetActive(false);
+			paris.SetActive (false);
+		}
+		else if (cityInput.text == "Hong Kong") {
+			nyc.SetActive (false);
+			jerusalem.SetActive (false);
+			hongKong.SetActive(true);
+			paris.SetActive (false);
+		}
+		else {
+			nyc.SetActive (false);
+			jerusalem.SetActive(false);
+			hongKong.SetActive(false);
+			paris.SetActive(true);
+		}
 	}
 
 	public void OpenLoginPage(){

@@ -17,11 +17,6 @@ public class FBScript : MonoBehaviour {
 	
 	}
 
-	void Update(){
-
-		StartCoroutine (UserImage (ID));
-	}
-
 	void SetInit()
 	{
 		if (FB.IsLoggedIn) {
@@ -56,7 +51,6 @@ public class FBScript : MonoBehaviour {
 		} else {
 			if (FB.IsLoggedIn) {
 				ID = AccessToken.CurrentAccessToken.UserId;
-				//ID = aToken.UserId;
 				Debug.Log(ID);
 				Debug.Log ("FB is logged in");
 			} else {
@@ -72,9 +66,6 @@ public class FBScript : MonoBehaviour {
 		if (isLoggedIn) {
 			dialogLoggedIn.SetActive (true);
 			dialogLoggedOut.SetActive (false);
-
-			FB.API ("/me?fields=first_name", HttpMethod.GET, DisplayUsername);
-			//FB.API ("/me/picture?type=square&height=128&width=128", HttpMethod.GET, DisplayProfPic);
 
 		} else {
 			dialogLoggedIn.SetActive (false);
